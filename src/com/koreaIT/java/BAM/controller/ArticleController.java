@@ -8,12 +8,12 @@ import com.koreaIT.java.BAM.dto.Article;
 import com.koreaIT.java.BAM.util.Util;
 
 public class ArticleController extends Controller {
-	List<Article> articles;
-	Scanner sc;
-	String cmd;
+	private List<Article> articles;
+	private Scanner sc;
+	private String cmd;
 
-	public ArticleController(List<Article> articles, Scanner sc) {
-		this.articles = articles;
+	public ArticleController(Scanner sc) {
+		this.articles = new ArrayList<>();
 		this.sc = sc;
 	}
 
@@ -37,8 +37,13 @@ public class ArticleController extends Controller {
 				case "delete" :
 					doDelete();
 					break;
-					}
+				default :
+					System.out.println("존재하지 않는 명령어입니다");
+					break;
+				}
 	}					
+						
+					
 					
 					
 					
@@ -47,7 +52,7 @@ public class ArticleController extends Controller {
 	
 	
 
-	public void doWrite() {
+	private void doWrite() {
 		int id = articles.size() + 1;
 //	lastArticleId = id;
 		String regDate = Util.getNowDateStr();
@@ -64,7 +69,7 @@ public class ArticleController extends Controller {
 
 	}
 
-	public void showList() {
+	private void showList() {
 		if (articles.size() == 0) {
 			System.out.println("게시물이 없습니다");
 			return;
@@ -97,7 +102,7 @@ public class ArticleController extends Controller {
 		}
 	}
 
-	public void showDetail() {
+	private void showDetail() {
 		String[] cmdBits = cmd.split(" ");
 		
 		if(cmdBits.length == 2) {
@@ -124,7 +129,7 @@ public class ArticleController extends Controller {
 	}
 	
 	
-	public void doModify() {
+	private void doModify() {
 	String[] cmdBits = cmd.split("");
 	
 
@@ -158,7 +163,7 @@ public class ArticleController extends Controller {
 	
 	
 	
-	public void doDelete() {
+	private void doDelete() {
 		String[] cmdBits = cmd.split("");
 		
 
@@ -210,6 +215,12 @@ public class ArticleController extends Controller {
 		}
 		return null;
 	}
-
+	
+	public void makeTestData() {
+		System.out.println("테스트를 위한 게시물을 생성합니다");
+		articles.add(new Article(1, Util.getNowDateStr(), "제목1", "내용1", 11));
+		articles.add(new Article(2, Util.getNowDateStr(), "제목2", "내용2", 22));
+		articles.add(new Article(3, Util.getNowDateStr(), "제목3", "내용3", 33));
+	}
 
 }
