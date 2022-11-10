@@ -45,7 +45,7 @@ public class App {
 				break;
 			}
 			
-			String[] cmdBits = cmd.split("");
+			String[] cmdBits = cmd.split(" ");
 			
 			if(cmdBits.length == 1) {
 				System.out.println("명령어를 확인해주세요");
@@ -67,7 +67,7 @@ public class App {
 				System.out.println("존재하지 않는 명령어 입니다");
 			}
 			
-			controller.doAction();
+			controller.doAction(cmd,methodName);
 			
 //			else if (cmd.equals("member join")) {
 //				MemberController.doJoin();
@@ -102,10 +102,11 @@ public class App {
 //		}
 
 
-			sc.close();
+			
 	}
 
 		System.out.println("==프로그램 끝==");
+		sc.close();
 	}
 
 	private void makeTestData() {

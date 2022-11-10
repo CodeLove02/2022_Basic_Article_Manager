@@ -15,13 +15,18 @@ public class MemberController extends Controller {
 		this.members = members;
 		this.sc = sc;
 	}
-	
+
 	@Override
-	public void doAction(String cmd) {
+	public void doAction(String cmd, String methodName) {
 		this.cmd = cmd;
-		
+
+		switch (methodName) {
+		case "join":
+			doJoin();
+			break;
+		}
+
 	}
-	
 
 	public void doJoin() {
 
