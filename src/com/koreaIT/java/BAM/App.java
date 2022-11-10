@@ -51,16 +51,35 @@ public class App {
 				articles.add(article);
 
 				System.out.printf("%s , %s\n", title, body);
-			} else if (cmd.equals("article list")) {
+			} else if (cmd.startsWith("article list")) {
 
 				if (articles.size() == 0) {
 					System.out.println("게시물이 없습니다");
 					continue;
 				}
 
+				List<Article> forPrintArticles = articles;
+
+				String searchKeyword = cmd.substring("article list".length()).trim();
+				System.out.println("검색어" + searchKeyword);
+
+				if (searchKeyword.length() > 0) {
+					System.out.println("검색어 : " + searchKeyword);
+					forPrintArticles = new ArrayList<>();
+					for (Article article : articles) {
+						if (article.title.contains(searchKeyword)) {
+							forPrintArticles.add(article);
+						}
+					}
+					if (forPrintArticles.size() == 0) {
+						System.out.println("검색결과가 없습니다");
+						continue;
+					}
+				}
+
 				System.out.println("번호    |    제목			| 		날짜					| 		조회");
-				for (int i = articles.size() - 1; i >= 0; i--) {
-					Article article = articles.get(i);
+				for (int i = forPrintArticles.size() - 1; i >= 0; i--) {
+					Article article = forPrintArticles.get(i);
 					System.out.printf("%d    |    %s		|     %s 		|   		%d \n", article.id,
 							article.title, article.regDate, article.viewCnt);
 				}
@@ -138,16 +157,16 @@ public class App {
 		sc.close();
 	}
 
-	private int getArticleIndexById(int id) 
-	int i = 0;
-	for (Article article : articles) {
-		if (article.id == id) {
-			return i;
+	private int getArticleIndexById(int id) {
+		int i = 0;
+		for (Article article : articles) {
+			if (article.id == id) {
+				return i;
+			}
+			i++;
 		}
-		i++;
+		return -1;
 	}
-	return -1;
-}
 
 //	{
 //		for (int i = 0; i < articles.size(); i++) {
@@ -162,17 +181,16 @@ public class App {
 //		return -1;
 //	}
 
-	private Article getArticleById(int id) { 
-	
-	int index = getArticleIndexById(id);
-	
-	if(index != -1) {
-		return articles.get(index);
+	private Article getArticleById(int id) {
+
+		int index = getArticleIndexById(id);
+
+		if (index != -1) {
+			return articles.get(index);
+		}
+		return null;
 	}
-	return null;
-	}
-	
-	
+
 //	{
 //		for (Article article : articles) {
 //			if (article.id == id) {
