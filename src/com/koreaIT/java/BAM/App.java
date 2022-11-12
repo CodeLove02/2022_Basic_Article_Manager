@@ -19,6 +19,7 @@ public class App {
 		ArticleController ArticleController = new ArticleController(sc);
 
 		ArticleController.makeTestData();
+		MemberController.makeTestData();
 		
 //		int lastArticleId = 3;
 		while (true) {

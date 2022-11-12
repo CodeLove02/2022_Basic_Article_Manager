@@ -5,16 +5,18 @@ import java.util.List;
 import java.util.Scanner;
 
 import com.koreaIT.java.BAM.dto.Article;
+import com.koreaIT.java.BAM.dto.Member;
 import com.koreaIT.java.BAM.util.Util;
 
 public class ArticleController extends Controller {
 	private List<Article> articles;
 	private Scanner sc;
 	private String cmd;
-
+	
 	public ArticleController(Scanner sc) {
 		this.articles = new ArrayList<>();
 		this.sc = sc;
+		
 	}
 
 	@Override
@@ -23,6 +25,12 @@ public class ArticleController extends Controller {
 				
 				switch(methodName) {
 				case "write" :
+					if(isLogined() == false) {
+						
+						System.out.println("로그인 후 이용해주세요");
+						break;
+					}
+					
 					doWrite();
 					break;
 				case "list" :
@@ -53,6 +61,9 @@ public class ArticleController extends Controller {
 	
 
 	private void doWrite() {
+		
+		
+		
 		int id = articles.size() + 1;
 //	lastArticleId = id;
 		String regDate = Util.getNowDateStr();

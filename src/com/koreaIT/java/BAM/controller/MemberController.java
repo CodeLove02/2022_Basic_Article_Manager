@@ -4,14 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import com.koreaIT.java.BAM.dto.Article;
 import com.koreaIT.java.BAM.dto.Member;
 import com.koreaIT.java.BAM.util.Util;
 
 public class MemberController extends Controller {
 	private List<Member> members;
 	private Scanner sc;
-	private String cmd;
-	private Member loginedMember;
+	
+	
 
 	public MemberController(Scanner sc) {
 		this.members = new ArrayList<>();
@@ -20,7 +21,7 @@ public class MemberController extends Controller {
 
 	@Override
 	public void doAction(String cmd, String methodName) {
-		this.cmd = cmd;
+		
 
 		switch (methodName) {
 		case "join":
@@ -29,15 +30,49 @@ public class MemberController extends Controller {
 		case "login":
 			doLogin();
 			break;
-			
+		case "profile":
+			showProfile();
+			break;
+		case "logout":
+			doLogout();
+			break;
 		default :
 			System.out.println("존재하지 않는 명령어입니다");
 			break;
 		}
+		
+	}
 
+
+	private void doLogout() {
+		if(isLogined() == false) {
+			System.out.println("로그인 후 이용해주세요");
+			return;
+		}
+		
+		loginedMember = null;
+		System.out.println("로그아웃 되었습니다");
+		
+	}
+
+	private void showProfile() {
+		if(loginedMember == null) {
+			System.out.println("로그아웃 상태입니다");
+			return;
+		}
+		
+		System.out.println("==내 정보==");
+		System.out.printf("로그인 아이디 : %s\n" , loginedMember.loginId);
+		System.out.printf("이름 : %s\n" , loginedMember.name);
 	}
 
 	private void doLogin() {
+		
+		if(isLogined()) {
+			System.out.println("로그아웃 후 이용해주세요");
+			return;
+		}
+		
 		System.out.printf("로그인 아이디 : ");
 		String loginId = sc.nextLine();
 		System.out.printf("로그인 비밀번호 : ");
@@ -53,18 +88,9 @@ public class MemberController extends Controller {
 			return;
 		}
 			loginedMember = member;
-			System.out.println("로그인 성공!");
+			System.out.printf("로그인 성공! %s님 환영합니다\n",loginedMember.name);
 		}
 
-	private Member getMemberByLoginId(String loginId) {
-		int index = getMemberIndexByLoginId(loginId);
-		
-		if(index != -1) {
-			return members.get(index);
-		}
-		
-		return null;
-	}
 
 	private void doJoin() {
 
@@ -111,6 +137,9 @@ public class MemberController extends Controller {
 		System.out.printf("%s 회원님 환영합니다\n", loginId);
 	}
 
+	
+	
+	
 	private boolean loginIdChk(String loginId) {
 		int index = getMemberIndexByLoginId(loginId);
 
@@ -131,4 +160,20 @@ public class MemberController extends Controller {
 		return -1;
 	}
 
+	private Member getMemberByLoginId(String loginId) {
+		int index = getMemberIndexByLoginId(loginId);
+		
+		if(index != -1) {
+			return members.get(index);
+		}
+		
+		return null;
+	}
+	
+	public void makeTestData() {
+		System.out.println("테스트를 위한 회원을 생성합니다");
+		members.add(new Member(1, Util.getNowDateStr(), "test1", "test1", "김철수"));
+		members.add(new Member(2, Util.getNowDateStr(), "test2", "test2", "김영희"));
+		members.add(new Member(3, Util.getNowDateStr(), "test3", "test3", "박영수"));
+	}
 }
