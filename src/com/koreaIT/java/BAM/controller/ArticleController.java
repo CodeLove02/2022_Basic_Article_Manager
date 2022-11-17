@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import com.koreaIT.java.BAM.container.Container;
 import com.koreaIT.java.BAM.dto.Article;
 import com.koreaIT.java.BAM.dto.Member;
 import com.koreaIT.java.BAM.util.Util;
@@ -14,7 +15,7 @@ public class ArticleController extends Controller {
 	private String cmd;
 
 	public ArticleController(Scanner sc) {
-		this.articles = new ArrayList<>();
+		this.articles = Container.articleDao.articles;
 		this.sc = sc;
 
 	}
@@ -50,7 +51,7 @@ public class ArticleController extends Controller {
 
 	private void doWrite() {
 
-		int id = articles.size() + 1;
+		int id = Container.articleDao.getNewId();
 //	lastArticleId = id;
 		String regDate = Util.getNowDateStr();
 		System.out.printf("제목 : ");
@@ -60,9 +61,9 @@ public class ArticleController extends Controller {
 
 		Article article = new Article(id, regDate, loginedMember.id, title, body);
 
-		articles.add(article);
+		Container.articleDao.add(article);
 
-		System.out.printf("%d글이 생성되었습니다\n", id);
+		System.out.printf("%d 번글이 생성되었습니다\n", id);
 
 	}
 
@@ -94,8 +95,20 @@ public class ArticleController extends Controller {
 		System.out.println("번호    |    제목			| 		날짜	|	작성자				| 		조회");
 		for (int i = forPrintArticles.size() - 1; i >= 0; i--) {
 			Article article = forPrintArticles.get(i);
+			
+			String writerName = null;
+			
+			List<Member> members = Container.memberDao.members;
+			
+			for(Member member : members) {
+				if(article.memberId == member.id) {
+					writerName = member.name;
+					break;
+				}
+			}
+			
 			System.out.printf("%d    |    %s		|     %s 		|   	%s				|			%d \n",
-					article.id, article.title, article.regDate, article.memberId, article.viewCnt);
+					article.id, article.title, article.regDate, writerName, article.viewCnt);
 		}
 	}
 
@@ -163,7 +176,7 @@ public class ArticleController extends Controller {
 	}
 
 	private void doDelete() {
-		String[] cmdBits = cmd.split("");
+		String[] cmdBits = cmd.split(" ");
 
 		if (cmdBits.length == 2) {
 			System.out.println("article delete 뒤에 번호를 추가해주세요");
@@ -214,9 +227,9 @@ public class ArticleController extends Controller {
 
 	public void makeTestData() {
 		System.out.println("테스트를 위한 게시물을 생성합니다");
-		articles.add(new Article(1, Util.getNowDateStr(), 1, "제목1", "내용1", 11));
-		articles.add(new Article(2, Util.getNowDateStr(), 2, "제목2", "내용2", 22));
-		articles.add(new Article(3, Util.getNowDateStr(), 2, "제목3", "내용3", 33));
+		Container.articleDao.add(new Article(Container.articleDao.getNewId(), Util.getNowDateStr(), 1, "제목1", "내용1", 11));
+		Container.articleDao.add(new Article(Container.articleDao.getNewId(), Util.getNowDateStr(), 2, "제목2", "내용2", 22));
+		Container.articleDao.add(new Article(Container.articleDao.getNewId(), Util.getNowDateStr(), 2, "제목3", "내용3", 33));
 	}
 
 }
